@@ -1,0 +1,25 @@
+# The original Drop ALT (massdrop/alt, ATSAMD51) was removed from QMK in 0.27.0,
+# so it is built against the last release that still supports it.
+name: Build QMK firmware (original Drop ALT)
+
+on: [push, workflow_dispatch]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: 'QMK Userspace Build'
+    uses: qmk/.github/.github/workflows/qmk_userspace_build.yml@main
+    with:
+      qmk_repo: qmk/qmk_firmware
+      qmk_ref: 0.26.11
+      preparation_command: cp qmk_alt.json qmk.json
+
+  publish:
+    name: 'QMK Userspace Publish'
+    uses: qmk/.github/.github/workflows/qmk_userspace_publish.yml@main
+    if: always() && !cancelled()
+    needs: build
+    with:
+      release_name: latest-alt
