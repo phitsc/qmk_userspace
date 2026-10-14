@@ -48,17 +48,22 @@ TEXT_DARK = "#1f2328"
 TEXT_MUTED = "#6b7280"
 
 # ---------------------------------------------------------------- labels
-CH = {  # Swiss German host layout: what the US keycode actually types
-    "KC_Y": "Z", "KC_Z": "Y", "KC_MINS": "'", "KC_EQL": "^", "KC_EQUAL": "^",
-    "KC_LBRC": "Ü", "KC_RBRC": "¨", "KC_NUHS": "$", "KC_SCLN": "Ö",
-    "KC_QUOT": "Ä", "KC_SLSH": "-", "KC_COMM": ",", "KC_DOT": ".",
-    "KC_NUBS": "<", "KC_GRV": "§",
+# Swiss German keycodes (QMK keymap_swiss_de.h) and the character each one types
+CH_BASE = {
+    "CH_SECT": "§", "CH_QUOT": "'", "CH_CIRC": "^", "CH_UDIA": "Ü", "CH_DIAE": "¨",
+    "CH_ODIA": "Ö", "CH_ADIA": "Ä", "CH_DLR": "$", "CH_LABK": "<", "CH_COMM": ",",
+    "CH_DOT": ".", "CH_MINS": "-",
 }
-SHIFTED = {"KC_RBRC": "!", "KC_0": "=", "KC_1": "+", "KC_3": "*", "KC_5": "%",
-           "KC_6": "&", "KC_7": "/", "KC_NUBS": ">", "KC_DOT": ":"}
-ALTGR = {"KC_1": "¦", "KC_2": "@", "KC_3": "#", "KC_7": "|", "KC_E": "€",
-         "KC_NUBS": "\\", "KC_LBRC": "[", "KC_RBRC": "]", "KC_QUOT": "{",
-         "KC_NUHS": "}"}
+CH_SYMBOLS = {  # typed with Shift or AltGr
+    "CH_DEG": "°", "CH_PLUS": "+", "CH_DQUO": '"', "CH_ASTR": "*", "CH_CCED": "ç",
+    "CH_PERC": "%", "CH_AMPR": "&", "CH_SLSH": "/", "CH_LPRN": "(", "CH_RPRN": ")",
+    "CH_EQL": "=", "CH_QUES": "?", "CH_GRV": "`", "CH_EGRV": "è", "CH_EXLM": "!",
+    "CH_EACU": "é", "CH_AGRV": "à", "CH_PND": "£", "CH_RABK": ">", "CH_SCLN": ";",
+    "CH_COLN": ":", "CH_UNDS": "_", "CH_BRKP": "¦", "CH_AT": "@", "CH_HASH": "#",
+    "CH_NOT": "¬", "CH_PIPE": "|", "CH_CENT": "¢", "CH_ACUT": "´", "CH_TILD": "~",
+    "CH_EURO": "€", "CH_LBRC": "[", "CH_RBRC": "]", "CH_LCBR": "{", "CH_RCBR": "}",
+    "CH_BSLS": "\\",
+}
 NAMED = {
     "KC_TAB": ("Tab", "mod"), "KC_LSFT": ("Shift", "mod"), "KC_RSFT": ("Shift", "mod"),
     "KC_LALT": ("Alt", "mod"), "KC_LCTL": ("Ctrl", "mod"), "KC_LGUI": ("Gui", "mod"),
@@ -84,17 +89,16 @@ NAMED = {
     "LM_TOGG": ("Backlight\non/off", "rgb"), "LM_BRIU": ("Backlight\n+", "rgb"),
     "LM_BRID": ("Backlight\n−", "rgb"),
     "QK_BOOT": ("Reset", "system"), "VRSN": ("Version", "system"), "NK_TOGG": ("NKRO", "system"),
-    "BRK_Z": ("Break\n+ Z", "window"),
     "LCA(KC_LGUI)": ("Ctrl+Alt\n+Gui", "window"), "LCA(KC_SPC)": ("Ctrl+Alt\n+Space", "window"),
-    "C(KC_RBRC)": ("Ctrl+¨", "window"),
+    "C(CH_DIAE)": ("Ctrl+¨", "window"),
 }
 ARROWS = {"KC_LEFT": "←", "KC_RIGHT": "→", "KC_RGHT": "→", "KC_UP": "↑", "KC_DOWN": "↓"}
 
 
 def base_char(kc):
-    if kc in CH:
-        return CH[kc]
-    m = re.fullmatch(r"KC_([A-Z0-9])", kc)
+    if kc in CH_BASE:
+        return CH_BASE[kc]
+    m = re.fullmatch(r"CH_([A-Z0-9])", kc)
     return m.group(1) if m else None
 
 
@@ -106,10 +110,8 @@ def label(kc):
         return f"Fn{m.group(1)}", f"layer{m.group(1)}"
     if m := re.fullmatch(r"KC_F(\d+)", kc):
         return f"F{m.group(1)}", "fkey"
-    if m := re.fullmatch(r"S\((\w+)\)", kc):
-        return SHIFTED[m.group(1)], "symbol"
-    if m := re.fullmatch(r"RALT\((\w+)\)", kc):
-        return ALTGR[m.group(1)], "symbol"
+    if kc in CH_SYMBOLS:
+        return CH_SYMBOLS[kc], "symbol"
     if m := re.fullmatch(r"G\((\w+)\)", kc):
         k = m.group(1)
         return "Gui+" + (ARROWS.get(k) or base_char(k)), "window"

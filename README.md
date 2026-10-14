@@ -41,7 +41,7 @@ The images are generated from the keymap code. After changing a keymap, regenera
 
 | Path                                                       | Used by                     |
 |------------------------------------------------------------|-----------------------------|
-| `users/swissgerman_programmer/`                            | all: custom keycodes (`` ` ``/`~`, `^`, Break+Z, version) |
+| `users/swissgerman_programmer/`                            | all: custom keycodes (`` ` ``/`~`, `^`, version) |
 | `layouts/ortho_5x12/swissgerman_programmer/keymap.c`       | Preonic                     |
 | `layouts/ergodox/swissgerman_programmer/keymap.c`          | ErgoDox (layer LEDs) and Infinity (LCD) |
 | `keyboards/massdrop/alt/keymaps/swissgerman_programmer/`   | Drop ALT                    |

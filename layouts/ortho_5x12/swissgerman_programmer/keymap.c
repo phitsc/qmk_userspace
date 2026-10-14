@@ -16,11 +16,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [0] = LAYOUT_ortho_5x12(
-  GRV_TLD, KC_1        , KC_2  , KC_3,    KC_4          , KC_5   , KC_6  , KC_7  , KC_8   , KC_9   , KC_0   , KC_MINS,
-  KC_TAB , KC_Q        , KC_W  , KC_E,    KC_R          , KC_T   , KC_Y  , KC_U  , KC_I   , KC_O   , KC_P   , KC_LBRC,
-  MO(1)  , KC_A        , KC_S  , KC_D,    KC_F          , KC_G   , KC_H  , KC_J  , KC_K   , KC_L   , KC_SCLN, KC_QUOT,
-  KC_LSFT, KC_Z        , KC_X  , KC_C,    KC_V          , KC_B   , KC_N  , KC_M  , KC_COMM, KC_DOT , KC_UP  , KC_SLSH,
-  MO(3)  , LCA(KC_LGUI), MO(2) , KC_LALT, LCTL_T(KC_ESC), KC_BSPC, KC_ENT, KC_SPC, MO(1)  , KC_LEFT, KC_DOWN, KC_RGHT
+  GRV_TLD, CH_1,         CH_2,  CH_3,    CH_4,           CH_5,    CH_6,   CH_7,   CH_8,    CH_9,    CH_0,    CH_QUOT,
+  KC_TAB,  CH_Q,         CH_W,  CH_E,    CH_R,           CH_T,    CH_Z,   CH_U,   CH_I,    CH_O,    CH_P,    CH_UDIA,
+  MO(1),   CH_A,         CH_S,  CH_D,    CH_F,           CH_G,    CH_H,   CH_J,   CH_K,    CH_L,    CH_ODIA, CH_ADIA,
+  KC_LSFT, CH_Y,         CH_X,  CH_C,    CH_V,           CH_B,    CH_N,   CH_M,   CH_COMM, CH_DOT,  KC_UP,   CH_MINS,
+  MO(3),   LCA(KC_LGUI), MO(2), KC_LALT, LCTL_T(KC_ESC), KC_BSPC, KC_ENT, KC_SPC, MO(1),   KC_LEFT, KC_DOWN, KC_RGHT
 ),
 
 /* Symbol layer
@@ -37,11 +37,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [1] = LAYOUT_ortho_5x12(
-  KC_GRV , RALT(KC_1), RALT(KC_2), RALT(KC_3), _______, _______, _______   , RALT(KC_NUBS), _______      , _______  , S(KC_RBRC), KC_EQUAL,
-  _______, S(KC_RBRC), S(KC_0)   , RALT(KC_E), _______, _______, _______   , RALT(KC_LBRC), RALT(KC_RBRC), _______  , _______   , KC_RBRC ,
-  _______, S(KC_1)   , KC_SLSH   , S(KC_3)   , S(KC_7), _______, RALT(KC_7), RALT(KC_QUOT), RALT(KC_NUHS), S(KC_6)  , CIRC      , KC_NUHS ,
-  _______, _______   , _______   , _______   , S(KC_5), _______, KC_SLSH   , KC_NUBS      , S(KC_NUBS)   , S(KC_DOT), KC_PGUP   , _______ ,
-  _______, _______   , _______   , _______   , _______, KC_DEL , _______   , _______      , _______      , KC_HOME  , KC_PGDN   , KC_END
+  CH_SECT, CH_BRKP, CH_AT,   CH_HASH, _______, _______, _______, CH_BSLS, _______, _______, CH_EXLM, CH_CIRC,
+  _______, CH_EXLM, CH_EQL,  CH_EURO, _______, _______, _______, CH_LBRC, CH_RBRC, _______, _______, CH_DIAE,
+  _______, CH_PLUS, CH_MINS, CH_ASTR, CH_SLSH, _______, CH_PIPE, CH_LCBR, CH_RCBR, CH_AMPR, CIRC,    CH_DLR,
+  _______, _______, _______, _______, CH_PERC, _______, CH_MINS, CH_LABK, CH_RABK, CH_COLN, KC_PGUP, _______,
+  _______, _______, _______, _______, _______, KC_DEL,  _______, _______, _______, KC_HOME, KC_PGDN, KC_END
 ),
 
 /* Function layer
@@ -58,10 +58,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [2] = LAYOUT_ortho_5x12(
-  _______, KC_F1  , KC_F2  , KC_F3  , _______, _______, _______, _______, _______, _______, _______, _______,
-  _______, KC_F4  , KC_F5  , KC_F6  , _______, _______, _______, _______, _______, _______, KC_PSCR, _______,
-  _______, KC_F7  , KC_F8  , KC_F9  , _______, _______, _______, KC_VOLD, KC_VOLU, _______, _______, _______,
-  _______, KC_F10 , KC_F11 , KC_F12 , _______, _______, _______, KC_MUTE, _______, MS_BTN1, MS_UP  , MS_BTN2,
+  _______, KC_F1,   KC_F2,   KC_F3,   _______, _______, _______, _______, _______, _______, _______, _______,
+  _______, KC_F4,   KC_F5,   KC_F6,   _______, _______, _______, _______, _______, _______, KC_PSCR, _______,
+  _______, KC_F7,   KC_F8,   KC_F9,   _______, _______, _______, KC_VOLD, KC_VOLU, _______, _______, _______,
+  _______, KC_F10,  KC_F11,  KC_F12,  _______, _______, _______, KC_MUTE, _______, MS_BTN1, MS_UP,   MS_BTN2,
   _______, _______, _______, _______, _______, KC_MPRV, KC_MNXT, KC_MPLY, _______, MS_LEFT, MS_DOWN, MS_RGHT
 ),
 
@@ -73,17 +73,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * | Vrsn | Gui+A|      | Gui+D|      |      |      |      |      | Gui+L|      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |      |      | Gui+C| Gui+V|      |      | Brk,Z|      |      | Gui+↑|      |
+ * |      |      |      | Gui+C| Gui+V|      |      |      |      |      | Gui+↑|      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |Ctrl+¨|      |      |CA+Spc| Gui+M| Gui+←| Gui+↓| Gui+→|
  * `-----------------------------------------------------------------------------------'
  */
 [3] = LAYOUT_ortho_5x12(
-  KC_F12 , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 ,
-  QK_BOOT, _______, _______, G(KC_E), G(KC_R), _______, _______, _______, G(KC_I), _______, _______, _______,
-  VRSN   , G(KC_A), _______, G(KC_D), _______, _______, _______, _______, _______, G(KC_L), _______, _______,
-  _______, _______, _______, G(KC_C), G(KC_V), _______, _______, BRK_Z  , _______, _______,G(KC_UP), _______,
-  _______, _______, _______, _______,C(KC_RBRC), _______, _______,LCA(KC_SPC),G(KC_M),G(KC_LEFT),G(KC_DOWN),G(KC_RIGHT)
+  KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,      KC_F5,   KC_F6,   KC_F7,       KC_F8,   KC_F9,      KC_F10,     KC_F11,
+  QK_BOOT, _______, _______, G(CH_E), G(CH_R),    _______, _______, _______,     G(CH_I), _______,    _______,    _______,
+  VRSN,    G(CH_A), _______, G(CH_D), _______,    _______, _______, _______,     _______, G(CH_L),    _______,    _______,
+  _______, _______, _______, G(CH_C), G(CH_V),    _______, _______, _______,     _______, _______,    G(KC_UP),   _______,
+  _______, _______, _______, _______, C(CH_DIAE), _______, _______, LCA(KC_SPC), G(CH_M), G(KC_LEFT), G(KC_DOWN), G(KC_RIGHT)
 ),
 
 };

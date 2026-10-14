@@ -1,4 +1,5 @@
 #include "swissgerman_programmer.h"
+#include "sendstring_swiss_de.h" // SEND_STRING types correctly on a Swiss German host
 #include "version.h"
 
 __attribute__((weak)) bool process_record_keymap(uint16_t keycode, keyrecord_t *record)
@@ -12,37 +13,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         return false;
     }
 
+    if (!record->event.pressed) {
+        return true;
+    }
+
     switch (keycode)
     {
         case VRSN:
-            if (record->event.pressed) {
-                SEND_STRING(QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
-            }
-        break;
+            SEND_STRING(QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
+            return false;
 
         case CIRC:
-            if (record->event.pressed) {
-                SEND_STRING("= "); // ^
-            }
-        break;
+            SEND_STRING("^"); // dead key, SEND_STRING adds the space
+            return false;
 
         case GRV_TLD:
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    clear_mods();
-                    SEND_STRING(SS_DOWN(X_RALT) "=" SS_UP(X_RALT) " ");
-                } else {
-                    SEND_STRING(SS_DOWN(X_LSFT) "=" SS_UP(X_LSFT) " ");
-                }
+            if (get_mods() & MOD_MASK_SHIFT) {
+                const uint8_t mods = get_mods();
+                del_mods(MOD_MASK_SHIFT);
+                SEND_STRING("~");
+                set_mods(mods);
+            } else {
+                SEND_STRING("`");
             }
-        break;
-
-        case BRK_Z:
-            if (record->event.pressed) {
-                tap_code(KC_BRK);
-                SEND_STRING("Y");
-            }
-        break;
+            return false;
     }
 
     return true;
