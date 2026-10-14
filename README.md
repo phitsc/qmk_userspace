@@ -37,7 +37,9 @@ qmk compile -kb preonic/rev1 -km swissgerman_programmer
 
 ## Flashing
 
-- **Preonic rev1**: QMK Toolbox (Atmel DFU). Enter the bootloader with the reset button on the bottom, or `QK_BOOT` (Fn1 + bottom-left key).
-- **ErgoDox (Teensy)**: Teensy Loader or QMK Toolbox; press the Teensy reset button, or `QK_BOOT` (L1 + top-left inner key).
-- **ErgoDox Infinity**: QMK Toolbox (kiibohd DFU); flash *both* halves; reset button on the bottom, or `QK_BOOT`.
-- **Drop ALT**: QMK Toolbox or Drop's `mdloader`; reset button through the hole on the bottom, or `QK_BOOT` (Fn1 + top-right key).
+On every keyboard, `QK_BOOT` (Reset) is on the Misc layer: hold Fn3 and press Tab.
+
+- **Preonic rev1**: QMK Toolbox (Atmel DFU). Enter the bootloader with the reset button on the bottom, or Fn3 + Tab.
+- **ErgoDox (Teensy)**: Teensy Loader or QMK Toolbox; press the Teensy reset button, or Fn3 + Tab.
+- **ErgoDox Infinity**: QMK Toolbox (kiibohd DFU); flash *both* halves; reset button on the bottom, or Fn3 + Tab.
+- **Drop ALT**: QMK Toolbox or Drop's `mdloader`; reset button through the hole on the bottom, or Fn3 + Tab.

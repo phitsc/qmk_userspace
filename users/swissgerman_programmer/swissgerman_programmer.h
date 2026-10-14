@@ -23,5 +23,9 @@ enum custom_keycodes {
     VRSN = SAFE_RANGE, // print version
     CIRC,              // ^
     GRV_TLD,           // ` or ~
-    BRK_Z              // Break followed by Z
+    BRK_Z,             // Break followed by Z
+    USER_SAFE_RANGE    // first free keycode for keymap-specific keycodes
 };
+
+// Optional per-keymap hook, called before the userspace keycodes are handled.
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record);
