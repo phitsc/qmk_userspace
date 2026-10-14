@@ -17,6 +17,26 @@ The original Drop ALT was removed from QMK in 0.27.0, so it has its own workflow
 (`.github/workflows/build_binaries_alt.yaml`) that builds against QMK 0.26.11 using the
 target list in `qmk_alt.json`.
 
+## Cheat sheets
+
+Four layers on every keyboard: **Basic**, **Symbol** (hold Fn1), **Function** (hold Fn2) and
+**Misc** (hold Fn3).
+
+### Preonic
+
+![Preonic cheat sheet](docs/cheatsheets/preonic.png)
+
+### Drop ALT
+
+![Drop ALT cheat sheet](docs/cheatsheets/drop_alt.png)
+
+### ErgoDox / ErgoDox Infinity
+
+![ErgoDox cheat sheet](docs/cheatsheets/ergodox.png)
+
+The images are generated from the keymap code. After changing a keymap, regenerate them with
+`python tools/cheatsheets.py` (needs Pillow and the Segoe UI font that ships with Windows).
+
 ## Layout
 
 | Path                                                       | Used by                     |
@@ -25,6 +45,7 @@ target list in `qmk_alt.json`.
 | `layouts/ortho_5x12/swissgerman_programmer/keymap.c`       | Preonic                     |
 | `layouts/ergodox/swissgerman_programmer/keymap.c`          | ErgoDox (layer LEDs) and Infinity (LCD) |
 | `keyboards/massdrop/alt/keymaps/swissgerman_programmer/`   | Drop ALT                    |
+| `tools/cheatsheets.py`, `docs/cheatsheets/`                | cheat sheet generator and images |
 
 ## Building locally (optional)
 
