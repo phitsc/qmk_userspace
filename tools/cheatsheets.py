@@ -89,7 +89,7 @@ NAMED = {
     "LM_TOGG": ("Backlight\non/off", "rgb"), "LM_BRIU": ("Backlight\n+", "rgb"),
     "LM_BRID": ("Backlight\n−", "rgb"),
     "QK_BOOT": ("Reset", "system"), "VRSN": ("Version", "system"), "NK_TOGG": ("NKRO", "system"),
-    "LCA(KC_LGUI)": ("Ctrl+Alt\n+Gui", "window"), "LCA(KC_SPC)": ("Ctrl+Alt\n+Space", "window"),
+    "LCA(KC_SPC)": ("Ctrl+Alt\n+Space", "window"),
     "C(CH_DIAE)": ("Ctrl+¨", "window"),
 }
 ARROWS = {"KC_LEFT": "←", "KC_RIGHT": "→", "KC_RGHT": "→", "KC_UP": "↑", "KC_DOWN": "↓"}

@@ -12,7 +12,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|  F9  |           | Shift|------+------+------+------+------+--------|
  * |  Shift |   Y  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |  Up  |   -    |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |  Fn3 |CA+Gui|  Fn2 | Alt  |CtlEsc|                                       |CtlEsc|  Fn1 | Left | Down |Right |
+ *   |  Fn3 |      |  Fn2 | Alt  |CtlEsc|                                       |CtlEsc|  Fn1 | Left | Down |Right |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        |  F5  |  F3  |       | PrtSc| Pause|
@@ -28,7 +28,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB  , CH_Q        , CH_W   , CH_E    , CH_R           , CH_T   , KC_F10  ,
     MO(1)   , CH_A        , CH_S   , CH_D    , CH_F           , CH_G   ,
     KC_LSFT , CH_Y        , CH_X   , CH_C    , CH_V           , CH_B   , KC_F9   ,
-    MO(3)   , LCA(KC_LGUI), MO(2)  , KC_LALT , LCTL_T(KC_ESC) ,
+    MO(3)   , _______     , MO(2)  , KC_LALT , LCTL_T(KC_ESC) ,
                                                                 KC_F5  , KC_F3   ,
                                                                          KC_F2   ,
                                                      KC_BSPC  , KC_DEL , KC_LCTL ,
