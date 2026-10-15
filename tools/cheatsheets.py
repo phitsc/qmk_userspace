@@ -90,7 +90,8 @@ NAMED = {
     "LM_BRID": ("Backlight\n−", "rgb"),
     "QK_BOOT": ("Reset", "system"), "VRSN": ("Version", "system"), "NK_TOGG": ("NKRO", "system"),
     "LCA(KC_SPC)": ("Ctrl+Alt\n+Space", "window"),
-    "C(CH_DIAE)": ("Ctrl+¨", "window"),
+    "C(S(CH_M))": ("Teams\nmute", "media"), "C(S(CH_O))": ("Teams\ncamera", "media"),
+    "C(S(CH_P))": ("Teams\nblur", "media"),
 }
 ARROWS = {"KC_LEFT": "←", "KC_RIGHT": "→", "KC_RGHT": "→", "KC_UP": "↑", "KC_DOWN": "↓"}
 
