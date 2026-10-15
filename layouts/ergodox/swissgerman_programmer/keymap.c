@@ -138,7 +138,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                        |      |      |       |      |      |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      |      |       |      |      |      |
- *                                 |      |      |------|       |------|      |CA+Spc|
+ *                                 | F14  |      |------|       |------| F15  |Launch|
  *                                 |      |      |      |       |      |      |      |
  *                                 `--------------------'       `--------------------'
  */
@@ -151,7 +151,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______ , _______ , _______ , _______ , KC_F13  ,
                                                           _______ , _______ ,
                                                                     _______ ,
-                                                _______ , _______ , _______ ,
+                                                KC_F14  , _______ , _______ ,
         // right hand
         KC_F7   , KC_F8   , KC_F9   , KC_F10  , KC_F11     , KC_F12     , LM_TOGG ,
         _______ , _______ , _______ , G(CH_I) , _______    , _______    , LM_BRIU ,
@@ -160,7 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                             _______ , _______ , G(KC_LEFT) , G(KC_DOWN) , G(KC_RIGHT) ,
         _______ , _______ ,
         _______ ,
-        _______ , _______ , LCA(KC_SPC)
+        _______ , KC_F15  , LAUNCHER
     ),
 };
 
