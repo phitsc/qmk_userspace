@@ -18,7 +18,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------------------------------------------------------------------------------------------|
  * | Shift       |  Y  |  X  |  C  |  V  |  B  |  N  |  M  |  ,  |  .  |  -  |  Shift  | Up  | PgDn|
  * |-----------------------------------------------------------------------------------------------|
- * | Fn3  | Alt  |CtlEsc|                Space                | Fn1  | Fn2  |    | Left| Down|Right|
+ * | Fn3  | Alt  |CtlEsc|                Space                | Fn2  | Fn1  |    | Left| Down|Right|
  * `-----------------------------------------------------------------------------------------------'
  */
 [0] = LAYOUT_65_ansi_blocker(
@@ -26,7 +26,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,         CH_Q,    CH_W,    CH_E,    CH_R,    CH_T,    CH_Z,    CH_U,    CH_I,    CH_O,    CH_P,    CH_UDIA, CH_DIAE, CH_DLR,  KC_HOME,
     MO(1),          CH_A,    CH_S,    CH_D,    CH_F,    CH_G,    CH_H,    CH_J,    CH_K,    CH_L,    CH_ODIA, CH_ADIA,          KC_ENT,  KC_PGUP,
     KC_LSFT,        CH_Y,    CH_X,    CH_C,    CH_V,    CH_B,    CH_N,    CH_M,    CH_COMM, CH_DOT,  CH_MINS, KC_RSFT,          KC_UP,   KC_PGDN,
-    MO(3),          KC_LALT, LCTL_T(KC_ESC),                    KC_SPC,                             MO(1),   MO(2),   KC_LEFT, KC_DOWN, KC_RGHT
+    MO(3),          KC_LALT, LCTL_T(KC_ESC),                    KC_SPC,                             MO(2),   MO(1),   KC_LEFT, KC_DOWN, KC_RGHT
 ),
 
 /* Symbol layer
@@ -61,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------------------------------------------------------------------------------------------|
  * |             | Area|RGBTg|     |     |     | NKRO| Mute|     |     |     |   MB1   | MUp | MB2 |
  * |-----------------------------------------------------------------------------------------------|
- * |      |      |      |                Play                 | Fn3  |      |    |MLeft|MDown|MRght|
+ * |      |      |      |                Play                 |      | Fn3  |    |MLeft|MDown|MRght|
  * `-----------------------------------------------------------------------------------------------'
  */
 [2] = LAYOUT_65_ansi_blocker(
@@ -69,7 +69,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     RGB_M_B, RGB_SPD,  RGB_VAI, RGB_SPI, RGB_HUI, RGB_SAI, _______, _______, _______, _______, KC_PSCR, KC_SCRL, KC_PAUS, _______, _______,
     _______, RGB_RMOD, RGB_VAD, RGB_MOD, RGB_HUD, RGB_SAD, _______, KC_VOLD, KC_VOLU, _______, _______, _______,          _______, _______,
     _______, LED_AREA, RGB_TOG, _______, _______, _______, NK_TOGG, KC_MUTE, _______, _______, _______, MS_BTN1,          MS_UP,   MS_BTN2,
-    _______, _______,  _______,                            KC_MPLY,                            MO(3),   _______, MS_LEFT, MS_DOWN, MS_RGHT
+    _______, _______,  _______,                            KC_MPLY,                            _______, MO(3),   MS_LEFT, MS_DOWN, MS_RGHT
 ),
 
 /* Misc layer
