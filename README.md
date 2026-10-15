@@ -22,6 +22,10 @@ target list in `qmk_alt.json`.
 Four layers on every keyboard: **Basic**, **Symbol** (hold Fn1), **Function** (hold Fn2) and
 **Misc** (hold Fn3).
 
+On the Drop ALT, while a Fn layer is held, the keys that do something on it light up in that
+layer's colour from the cheat sheets (Symbol green, Function blue, Misc orange) and the other
+keys go dark; the edge keeps its colour. Releasing the Fn key brings back the normal lighting.
+
 ### Preonic
 
 ![Preonic cheat sheet](docs/cheatsheets/preonic.png)

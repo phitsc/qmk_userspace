@@ -117,3 +117,58 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 
     return true;
 }
+
+// Hue per layer, same colours as the cheat sheets: Symbol green, Function blue, Misc orange.
+static const uint8_t layer_hues[] = { [1] = 102, [2] = 152, [3] = 21 };
+
+// While a Fn layer is active, light the keys that do something on it in the layer's colour
+// (plus the held Fn keys) and switch the other keys off. The edge keeps its colour.
+// On the Basic layer the effect runs as usual.
+bool rgb_matrix_indicators_user(void) {
+    const uint8_t layer = get_highest_layer(layer_state);
+
+    if (layer == 0 || layer >= sizeof(layer_hues)) {
+        // LEDs excluded by LED_AREA are not redrawn by the effect, so clear any layer colours left on them
+        for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+            if (!HAS_ANY_FLAGS(g_led_config.flags[i], rgb_matrix_get_flags())) {
+                rgb_matrix_set_color(i, 0, 0, 0);
+            }
+        }
+        return false;
+    }
+
+    const HSV hsv = { layer_hues[layer], 255, rgb_matrix_get_val() };
+    const RGB rgb = hsv_to_rgb(hsv);
+
+    for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
+        for (uint8_t col = 0; col < MATRIX_COLS; col++) {
+            const uint8_t led = g_led_config.matrix_co[row][col];
+            if (led == NO_LED) {
+                continue;
+            }
+
+            // The key's effective keycode: the first non-transparent one from the top active layer down
+            bool lit = false;
+            for (int8_t l = layer; l >= 0; l--) {
+                if (l > 0 && !layer_state_is(l)) { // the Basic layer is the default layer, not in layer_state
+                    continue;
+                }
+                const uint16_t keycode = keymap_key_to_keycode(l, (keypos_t){ .row = row, .col = col });
+                if (keycode == KC_TRNS) {
+                    continue;
+                }
+                const bool held_fn_key = IS_QK_MOMENTARY(keycode) && layer_state_is(QK_MOMENTARY_GET_LAYER(keycode));
+                lit = (l == layer && keycode != KC_NO) || held_fn_key;
+                break;
+            }
+
+            if (lit) {
+                rgb_matrix_set_color(led, rgb.r, rgb.g, rgb.b);
+            } else {
+                rgb_matrix_set_color(led, 0, 0, 0);
+            }
+        }
+    }
+
+    return false;
+}
