@@ -214,33 +214,59 @@ bool led_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 #endif
 
 #ifdef ST7565_ENABLE
-// Ergodox Infinity LCD: show layer name and active modifiers, tint the backlight per layer
-// in the cheat sheet colours (Symbol green, Function blue, Misc orange).
+#include ST7565_FONT_H // the driver's 6x8 font, to draw the layer name at twice its size
+
+// Ergodox Infinity LCD: show the layer name in large letters with the active modifiers above it,
+// and tint the backlight per layer in the cheat sheet colours (Symbol green, Function blue, Misc orange).
 static void set_lcd_rgb(uint8_t r, uint8_t g, uint8_t b) {
     ergodox_infinity_lcd_color(r * 257u, g * 257u, b * 257u);
 }
 
+// Draw a character of the 6x8 font at twice the size (12x16 pixels) with its top left corner at x/y.
+static void write_char_2x(uint8_t x, uint8_t y, char c) {
+    for (uint8_t col = 0; col < ST7565_FONT_WIDTH; col++) {
+        const uint8_t bits = pgm_read_byte(&font[((uint8_t)c - ST7565_FONT_START) * ST7565_FONT_WIDTH + col]);
+        for (uint8_t row = 0; row < ST7565_FONT_HEIGHT; row++) {
+            if (bits & (1 << row)) {
+                st7565_write_pixel(x + 2 * col,     y + 2 * row,     true);
+                st7565_write_pixel(x + 2 * col + 1, y + 2 * row,     true);
+                st7565_write_pixel(x + 2 * col,     y + 2 * row + 1, true);
+                st7565_write_pixel(x + 2 * col + 1, y + 2 * row + 1, true);
+            }
+        }
+    }
+}
+
+// Draw a string at twice the size, centred horizontally, in the lower 3/4 of the display.
+static void write_centered_2x(const char *text) {
+    const uint8_t width = strlen(text) * 2 * ST7565_FONT_WIDTH;
+    uint8_t       x     = (ST7565_DISPLAY_WIDTH - width) / 2;
+    for (; *text; text++, x += 2 * ST7565_FONT_WIDTH) {
+        write_char_2x(x, ST7565_FONT_HEIGHT + 2, *text);
+    }
+}
+
 void st7565_task_user(void) {
-    char status[17];
+    const char *name = "";
 
     if (layer_state_is(3)) {
-        strcpy(status, "      Misc      ");
+        name = "Misc";
         set_lcd_rgb(255, 126, 0);  // orange
     }
     else if (layer_state_is(2)) {
-        strcpy(status, "      Function  ");
+        name = "Function";
         set_lcd_rgb(0, 108, 255);  // blue
     }
     else if (layer_state_is(1)) {
-        strcpy(status, "      Symbol    ");
+        name = "Symbol";
         set_lcd_rgb(0, 255, 102);  // green
     }
     else {
-        strcpy(status, "                ");
         set_lcd_rgb(0, 0, 0);      // off
     }
 
-    uint8_t mods = get_mods();
+    char    status[4] = "   ";
+    uint8_t mods      = get_mods();
 
     if (mods & MOD_MASK_SHIFT) {
         status[0] = 'S';
@@ -255,7 +281,8 @@ void st7565_task_user(void) {
     }
 
     st7565_clear();
-    st7565_set_cursor(0, 1);
+    st7565_set_cursor(0, 0);
     st7565_write(status, false);
+    write_centered_2x(name);
 }
 #endif
