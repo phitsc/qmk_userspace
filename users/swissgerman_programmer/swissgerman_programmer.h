@@ -7,6 +7,7 @@ enum custom_keycodes {
     VRSN = SAFE_RANGE, // print version
     CIRC,              // ^
     GRV_TLD,           // ` or ~
+    BREATHE,           // switch the RGB / LED matrix to the breathing effect
     USER_SAFE_RANGE    // first free keycode for keymap-specific keycodes
 };
 

@@ -51,25 +51,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 /* Function layer
- * Based on Drop's default Fn keys. Hold Fn2, then the right Fn1 key, for the misc layer.
+ * Hold Fn2, then the Fn1 key next to it, for the misc layer.
  * ,-----------------------------------------------------------------------------------------------.
- * |     |  F1 |  F2 |  F3 |  F4 |  F5 |  F6 |  F7 |  F8 |  F9 | F10 | F11 | F12 |   Prev    | Next|
+ * |RGBTg|  F1 |  F2 |  F3 |  F4 |  F5 |  F6 |  F7 |  F8 |  F9 | F10 | F11 | F12 |   Prev    | Next|
  * |-----------------------------------------------------------------------------------------------|
- * | Brth   | Spd-| Val+| Spd+| Hue+| Sat+|     |     |     |     |PrtSc|ScrLk|Pause|        |     |
+ * | Val+   |  F4 |  F5 |  F6 |     |     |     |     |     |     |PrtSc|ScrLk|Pause| Mode-  |Mode+|
  * |-----------------------------------------------------------------------------------------------|
- * |          |Mode-| Val-|Mode+| Hue-| Sat-|     | Vol-| Vol+|     |     |     |            |     |
+ * | Val-     |  F7 |  F8 |  F9 |     |     |     | Vol-| Vol+|     |     |     |            |     |
  * |-----------------------------------------------------------------------------------------------|
- * |             | Area|RGBTg|     |     |     | NKRO| Mute|     |     |     |   MB1   | MUp | MB2 |
+ * | Area        | F10 | F11 | F12 |     | Brth| NKRO| Mute|     |     |     |   MB1   | MUp | MB2 |
  * |-----------------------------------------------------------------------------------------------|
  * |      |      |      |                Play                 |      | Fn3  |    |MLeft|MDown|MRght|
  * `-----------------------------------------------------------------------------------------------'
  */
 [2] = LAYOUT_65_ansi_blocker(
-    _______, KC_F1,    KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_MPRV, KC_MNXT,
-    RGB_M_B, RGB_SPD,  RGB_VAI, RGB_SPI, RGB_HUI, RGB_SAI, _______, _______, _______, _______, KC_PSCR, KC_SCRL, KC_PAUS, _______, _______,
-    _______, RGB_RMOD, RGB_VAD, RGB_MOD, RGB_HUD, RGB_SAD, _______, KC_VOLD, KC_VOLU, _______, _______, _______,          _______, _______,
-    _______, LED_AREA, RGB_TOG, _______, _______, _______, NK_TOGG, KC_MUTE, _______, _______, _______, MS_BTN1,          MS_UP,   MS_BTN2,
-    _______, _______,  _______,                            KC_MPLY,                            _______, MO(3),   MS_LEFT, MS_DOWN, MS_RGHT
+    RGB_TOG,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_MPRV,  KC_MNXT,
+    RGB_VAI,  KC_F4,   KC_F5,   KC_F6,   _______, _______, _______, _______, _______, _______, KC_PSCR, KC_SCRL, KC_PAUS, RGB_RMOD, RGB_MOD,
+    RGB_VAD,  KC_F7,   KC_F8,   KC_F9,   _______, _______, _______, KC_VOLD, KC_VOLU, _______, _______, _______,          _______,  _______,
+    LED_AREA, KC_F10,  KC_F11,  KC_F12,  _______, BREATHE, NK_TOGG, KC_MUTE, _______, _______, _______, MS_BTN1,          MS_UP,    MS_BTN2,
+    _______,  _______, _______,                            KC_MPLY,                            _______, MO(3),   MS_LEFT,  MS_DOWN,  MS_RGHT
 ),
 
 /* Misc layer

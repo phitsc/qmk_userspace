@@ -37,6 +37,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
                 SEND_STRING("`");
             }
             return false;
+
+        case BREATHE:
+#if defined(RGB_MATRIX_ENABLE) && defined(ENABLE_RGB_MATRIX_BREATHING)
+            rgb_matrix_mode(RGB_MATRIX_BREATHING);
+#elif defined(LED_MATRIX_ENABLE) && defined(ENABLE_LED_MATRIX_BREATHING)
+            led_matrix_mode(LED_MATRIX_BREATHING);
+#endif
+            return false;
     }
 
     return true;

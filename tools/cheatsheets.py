@@ -88,6 +88,7 @@ NAMED = {
     "RGB_SAD": ("Sat −", "rgb"), "RGB_M_B": ("Breathe", "rgb"), "LED_AREA": ("LED\narea", "rgb"),
     "LM_TOGG": ("Backlight\non/off", "rgb"), "LM_BRIU": ("Backlight\n+", "rgb"),
     "LM_BRID": ("Backlight\n−", "rgb"),
+    "BREATHE": ("Breathe", "rgb"), "LM_PREV": ("Effect\nprev", "rgb"), "LM_NEXT": ("Effect\nnext", "rgb"),
     "QK_BOOT": ("Reset", "system"), "VRSN": ("Version", "system"), "NK_TOGG": ("NKRO", "system"),
     "LAUNCHER": ("Launcher", "window"),
     "C(S(CH_M))": ("Teams\nmute", "media"), "C(S(CH_O))": ("Teams\ncamera", "media"),
