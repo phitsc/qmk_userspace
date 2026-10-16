@@ -25,6 +25,8 @@ Four layers on every keyboard: **Basic**, **Symbol** (hold Fn1), **Function** (h
 On the Drop ALT, while a Fn layer is held, the keys that do something on it light up in that
 layer's colour from the cheat sheets (Symbol green, Function blue, Misc orange) and the other
 keys go dark; the edge keeps its colour. Releasing the Fn key brings back the normal lighting.
+The ErgoDox Infinity does the same with its single-colour key LEDs, and both of its displays
+show the layer name with the backlight in the layer's colour.
 
 ### Preonic
 

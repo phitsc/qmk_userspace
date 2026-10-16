@@ -147,22 +147,7 @@ bool rgb_matrix_indicators_user(void) {
                 continue;
             }
 
-            // The key's effective keycode: the first non-transparent one from the top active layer down
-            bool lit = false;
-            for (int8_t l = layer; l >= 0; l--) {
-                if (l > 0 && !layer_state_is(l)) { // the Basic layer is the default layer, not in layer_state
-                    continue;
-                }
-                const uint16_t keycode = keymap_key_to_keycode(l, (keypos_t){ .row = row, .col = col });
-                if (keycode == KC_TRNS) {
-                    continue;
-                }
-                const bool held_fn_key = IS_QK_MOMENTARY(keycode) && layer_state_is(QK_MOMENTARY_GET_LAYER(keycode));
-                lit = (l == layer && keycode != KC_NO) || held_fn_key;
-                break;
-            }
-
-            if (lit) {
+            if (key_active_on_layer(layer, row, col)) {
                 rgb_matrix_set_color(led, rgb.r, rgb.g, rgb.b);
             } else {
                 rgb_matrix_set_color(led, 0, 0, 0);

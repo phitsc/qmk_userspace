@@ -190,9 +190,32 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
+#ifdef LED_MATRIX_ENABLE
+// ErgoDox Infinity (single-colour key LEDs): while a Fn layer is held, keep only the keys that
+// do something on it (plus the held Fn keys) lit and switch the others off.
+// Each half only drives its own LEDs, hence the per-half led_min/led_max range.
+bool led_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    const uint8_t layer = get_highest_layer(layer_state);
+    if (layer == 0) {
+        return false;
+    }
+
+    const uint8_t val = led_matrix_get_val();
+    for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
+        for (uint8_t col = 0; col < MATRIX_COLS; col++) {
+            const uint8_t led = g_led_config.matrix_co[row][col];
+            if (led >= led_min && led < led_max) {
+                led_matrix_set_value(led, key_active_on_layer(layer, row, col) ? val : 0);
+            }
+        }
+    }
+    return false;
+}
+#endif
+
 #ifdef ST7565_ENABLE
-// Ergodox Infinity LCD: show layer name and active modifiers, tint the backlight per layer.
-// Colors are the hues of the old visualizer (84, 124, 164 of 255) at full saturation.
+// Ergodox Infinity LCD: show layer name and active modifiers, tint the backlight per layer
+// in the cheat sheet colours (Symbol green, Function blue, Misc orange).
 static void set_lcd_rgb(uint8_t r, uint8_t g, uint8_t b) {
     ergodox_infinity_lcd_color(r * 257u, g * 257u, b * 257u);
 }
@@ -201,16 +224,16 @@ void st7565_task_user(void) {
     char status[17];
 
     if (layer_state_is(3)) {
-        strcpy(status, "      Macro     ");
-        set_lcd_rgb(0, 36, 255);   // blue
+        strcpy(status, "      Misc      ");
+        set_lcd_rgb(255, 126, 0);  // orange
     }
     else if (layer_state_is(2)) {
         strcpy(status, "      Function  ");
-        set_lcd_rgb(0, 255, 234);  // cyan
+        set_lcd_rgb(0, 108, 255);  // blue
     }
     else if (layer_state_is(1)) {
         strcpy(status, "      Symbol    ");
-        set_lcd_rgb(6, 255, 0);    // green
+        set_lcd_rgb(0, 255, 102);  // green
     }
     else {
         strcpy(status, "                ");

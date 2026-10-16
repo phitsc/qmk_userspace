@@ -15,5 +15,9 @@ enum custom_keycodes {
 // can type, so the same shortcut also works on a laptop keyboard.
 #define LAUNCHER C(S(KC_SPC))
 
+// True if the key at row/col does something on the given (active) layer, or holds an active
+// layer. Used to light only the meaningful keys while a Fn layer is held.
+bool key_active_on_layer(uint8_t layer, uint8_t row, uint8_t col);
+
 // Optional per-keymap hook, called before the userspace keycodes are handled.
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record);
