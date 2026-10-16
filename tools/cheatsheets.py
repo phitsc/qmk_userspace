@@ -86,6 +86,7 @@ NAMED = {
     "RGB_VAD": ("Bright\n−", "rgb"), "RGB_SPI": ("Speed\n+", "rgb"), "RGB_SPD": ("Speed\n−", "rgb"),
     "RGB_HUI": ("Hue +", "rgb"), "RGB_HUD": ("Hue −", "rgb"), "RGB_SAI": ("Sat +", "rgb"),
     "RGB_SAD": ("Sat −", "rgb"), "RGB_M_B": ("Breathe", "rgb"), "LED_AREA": ("LED\narea", "rgb"),
+    "MISC_FN2": ("Fn2", "layer2"),
     "LM_TOGG": ("Backlight\non/off", "rgb"), "LM_BRIU": ("Backlight\n+", "rgb"),
     "LM_BRID": ("Backlight\n−", "rgb"),
     "BREATHE": ("Breathe", "rgb"), "LM_PREV": ("Effect\nprev", "rgb"), "LM_NEXT": ("Effect\nnext", "rgb"),

@@ -3,7 +3,8 @@
 // Original Drop ALT (ATSAMD51). Only buildable with QMK 0.26.x, see README.
 
 enum alt_keycodes {
-    LED_AREA = USER_SAFE_RANGE // cycle lit LEDs: keys + edge, keys only, edge only
+    LED_AREA = USER_SAFE_RANGE, // cycle lit LEDs: keys + edge, keys only, edge only
+    MISC_FN2                    // on the Misc layer: Function layer while held (Fn3 + Alt = Fn2)
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -82,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------------------------------------------------------------------------------------------|
  * |             |     |     |Gui+C|Gui+V|     |     |Gui+M|     |     |     |         |Gui+↑|     |
  * |-----------------------------------------------------------------------------------------------|
- * |      |      | F13  |              Launcher               |      |      |    |Gui+←|Gui+↓|Gui+→|
+ * |      | Fn2  | F13  |              Launcher               |      |      |    |Gui+←|Gui+↓|Gui+→|
  * `-----------------------------------------------------------------------------------------------'
  */
 [3] = LAYOUT_65_ansi_blocker(
@@ -90,13 +91,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     QK_BOOT,    _______, _______, G(CH_E), G(CH_R), _______, _______, _______, G(CH_I), _______, _______, _______, _______, _______,    _______,
     VRSN,       G(CH_A), _______, G(CH_D), _______, _______, _______, _______, _______, G(CH_L), _______, _______,          KC_F15,     _______,
     _______,    _______, _______, G(CH_C), G(CH_V), _______, _______, G(CH_M), _______, _______, _______, _______,          G(KC_UP),   _______,
-    _______,    _______, KC_F13,                             LAUNCHER,                           _______, _______, G(KC_LEFT), G(KC_DOWN), G(KC_RIGHT)
+    _______,    MISC_FN2, KC_F13,                            LAUNCHER,                           _______, _______, G(KC_LEFT), G(KC_DOWN), G(KC_RIGHT)
 ),
 
 };
 
+static bool fn3_held = false;
+
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case MO(3):
+            fn3_held = record->event.pressed;
+            return true;
+
+        // A plain MO(2) would not do: the Misc layer (3) stays on and wins over the Function layer (2).
+        // So switch Misc off while this key is held, and back on if Fn3 is still held on release.
+        case MISC_FN2:
+            if (record->event.pressed) {
+                layer_off(3);
+                layer_on(2);
+            } else {
+                layer_off(2);
+                if (fn3_held) {
+                    layer_on(3);
+                }
+            }
+            return false;
+
         case LED_AREA:
             if (record->event.pressed) {
                 switch (rgb_matrix_get_flags()) {
