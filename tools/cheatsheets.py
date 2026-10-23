@@ -91,11 +91,16 @@ NAMED = {
     "LM_BRID": ("Backlight\n−", "rgb"),
     "BREATHE": ("Breathe", "rgb"), "LM_PREV": ("Effect\nprev", "rgb"), "LM_NEXT": ("Effect\nnext", "rgb"),
     "QK_BOOT": ("Reset", "system"), "VRSN": ("Version", "system"), "NK_TOGG": ("NKRO", "system"),
-    "LAUNCHER": ("Launcher", "window"),
+    "LAUNCHER": (("Ctrl+Shift+Space\nLauncher", "Ctrl+Shift\n+Space\nLauncher"), "window"),
     "C(S(CH_M))": ("Teams\nmute", "media"), "C(S(CH_O))": ("Teams\ncamera", "media"),
     "C(S(CH_P))": ("Teams\nblur", "media"),
 }
 ARROWS = {"KC_LEFT": "←", "KC_RIGHT": "→", "KC_RGHT": "→", "KC_UP": "↑", "KC_DOWN": "↓"}
+GUI_ACTIONS = {  # what Gui+key does in Windows 11
+    "CH_A": "Quick\nsettings", "CH_C": "Copilot", "CH_D": "Desktop", "CH_E": "Explorer",
+    "CH_I": "Settings", "CH_L": "Lock", "CH_M": "Min. all", "CH_R": "Run", "CH_V": "Clipboard",
+    "KC_UP": "Maximize", "KC_DOWN": "Minimize", "KC_LEFT": "Snap", "KC_RIGHT": "Snap",
+}
 
 
 def base_char(kc):
@@ -117,7 +122,10 @@ def label(kc):
         return CH_SYMBOLS[kc], "symbol"
     if m := re.fullmatch(r"G\((\w+)\)", kc):
         k = m.group(1)
-        return "Gui+" + (ARROWS.get(k) or base_char(k)), "window"
+        text = "Gui+" + (ARROWS.get(k) or base_char(k))
+        if k in GUI_ACTIONS:
+            text += "\n" + GUI_ACTIONS[k]
+        return text, "window"
     if m := re.fullmatch(r"C\(S\((\w+)\)\)", kc):
         return "Ctrl+Shift\n+" + base_char(m.group(1)), "window"
     if (c := base_char(kc)) is not None:
@@ -231,31 +239,54 @@ def font(size, bold=False):
     return _fonts[key]
 
 
-def fit_text(draw, text, max_w, max_h, start):
+def text_height(lines, sizes, descender=True):
+    """Height from the cap top of the first line to the baseline (or descender) of the last one."""
+    fonts = [font(s) for s in sizes]
+    h = -fonts[0].getbbox("A", anchor="ls")[1]
+    h += sum(f.getbbox("A")[3] + 2 for f in fonts[1:])
+    return h + (fonts[-1].getmetrics()[1] if descender else 0)
+
+
+def fit_lines(draw, lines, max_w, max_h, start):
+    """Font size per line: all lines share the largest size whose height fits,
+    then a line that is too wide shrinks on its own."""
     size = start
-    while size > 10:
-        f = font(size)
-        box = draw.multiline_textbbox((0, 0), text, font=f, spacing=2, align="center")
-        if box[2] - box[0] <= max_w and box[3] - box[1] <= max_h:
-            return f
+    while size > 10 and text_height(lines, [size] * len(lines)) > max_h:
         size -= 1
-    return font(10)
+    sizes = []
+    for line in lines:
+        s = size
+        while s > 10 and draw.textlength(line, font=font(s)) > max_w:
+            s -= 1
+        sizes.append(s)
+    return sizes
+
+
+def fit_key_text(draw, text, max_w, max_h):
+    lines = text.splitlines()
+    longest = max(len(line) for line in lines)
+    start = int(U * (0.36 if longest == 1 else 0.27 if longest <= 3 else 0.23))
+    return lines, fit_lines(draw, lines, max_w, max_h, start)
 
 
 def draw_key(draw, rect, text, fill, color, outline=None, bold=False):
+    """text may be a tuple of alternative wrappings; the one whose smallest line is largest wins."""
     x0, y0, x1, y1 = rect
     draw.rounded_rectangle(rect, RADIUS, fill=fill, outline=outline or "#c9ced6",
                            width=4 if outline else 2)
     if not text:
         return
     pad = 10
-    longest = max(len(line) for line in text.splitlines())
-    start = int(U * (0.36 if longest == 1 else 0.27 if longest <= 3 else 0.23))
-    f = fit_text(draw, text, x1 - x0 - 2 * pad, y1 - y0 - 2 * pad, start)
-    if bold:
-        f = font(f.size, bold=True)
+    variants = [text] if isinstance(text, str) else text
+    fits = [fit_key_text(draw, t, x1 - x0 - 2 * pad, y1 - y0 - 2 * pad) for t in variants]
+    lines, sizes = max(fits, key=lambda ls: min(ls[1]))
+    fonts = [font(s, bold) for s in sizes]
     cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
-    draw.multiline_text((cx, cy), text, font=f, fill=color, anchor="mm", align="center", spacing=2)
+    baseline = cy - text_height(lines, sizes, descender=False) / 2 -fonts[0].getbbox("A", anchor="ls")[1]
+    for i, (line, f) in enumerate(zip(lines, fonts)):
+        if i:
+            baseline += f.getbbox("A")[3] + 2
+        draw.text((cx, baseline), line, font=f, fill=color, anchor="ms")
 
 
 def render_layer(layers, n, geometry):
