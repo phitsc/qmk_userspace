@@ -4,41 +4,41 @@
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Basic layer
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |  ` ~   |   1  |   2  |   3  |   4  |   5  |  F11 |           |  Gui |   6  |   7  |   8  |   9  |   0  |   '    |
+ * |  ` ~   |   1  |   2  |   3  |   4  |   5  |  F2  |           |  F4  |   6  |   7  |   8  |   9  |   0  |   '    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |  Tab   |   Q  |   W  |   E  |   R  |   T  |  F10 |           |      |   Z  |   U  |   I  |   O  |   P  |   Ü    |
+ * |  Tab   |   Q  |   W  |   E  |   R  |   T  |  F3  |           |  F5  |   Z  |   U  |   I  |   O  |   P  |   Ü    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |  Fn1   |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   Ö  |   Ä    |
- * |--------+------+------+------+------+------|  F9  |           | Shift|------+------+------+------+------+--------|
+ * |--------+------+------+------+------+------| F11  |           | F12  |------+------+------+------+------+--------|
  * |  Shift |   Y  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |  Up  |   -    |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
  *   |  Fn3 |      |  Fn2 | Alt  |CtlEsc|                                       |CtlEsc|  Fn1 | Left | Down |Right |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        |  F5  |  F3  |       | PrtSc| Pause|
+ *                                        |C+S+Es|      |       | PrtSc|Shift |
  *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      |  F2  |       | CS+O |      |      |
+ *                                 |      |      |      |       | CS+O |      |      |
  *                                 |Backsp| Del  |------|       |------|Enter |Space |
  *                                 |      |      | Ctrl |       | CS+M |      |      |
  *                                 `--------------------'       `--------------------'
  */
 [0] = LAYOUT_ergodox(
     // left hand
-    GRV_TLD , CH_1        , CH_2   , CH_3    , CH_4           , CH_5   , KC_F11  ,
-    KC_TAB  , CH_Q        , CH_W   , CH_E    , CH_R           , CH_T   , KC_F10  ,
+    GRV_TLD , CH_1        , CH_2   , CH_3    , CH_4           , CH_5   , KC_F2   ,
+    KC_TAB  , CH_Q        , CH_W   , CH_E    , CH_R           , CH_T   , KC_F3   ,
     MO(1)   , CH_A        , CH_S   , CH_D    , CH_F           , CH_G   ,
-    KC_LSFT , CH_Y        , CH_X   , CH_C    , CH_V           , CH_B   , KC_F9   ,
+    KC_LSFT , CH_Y        , CH_X   , CH_C    , CH_V           , CH_B   , KC_F11  ,
     MO(3)   , _______     , MO(2)  , KC_LALT , LCTL_T(KC_ESC) ,
-                                                                KC_F5  , KC_F3   ,
-                                                                         KC_F2   ,
+                                                                C(S(KC_ESC)) , _______ ,
+                                                                         _______ ,
                                                      KC_BSPC  , KC_DEL , KC_LCTL ,
     // right hand
-    KC_LGUI , CH_6   , CH_7    , CH_8    , CH_9     , CH_0    , CH_QUOT  ,
-    _______ , CH_Z   , CH_U    , CH_I    , CH_O     , CH_P    , CH_UDIA  ,
+    KC_F4   , CH_6   , CH_7    , CH_8    , CH_9     , CH_0    , CH_QUOT  ,
+    KC_F5   , CH_Z   , CH_U    , CH_I    , CH_O     , CH_P    , CH_UDIA  ,
               CH_H   , CH_J    , CH_K    , CH_L     , CH_ODIA , CH_ADIA  ,
-    KC_RSFT , CH_N   , CH_M    , CH_COMM , CH_DOT   , KC_UP   , CH_MINS  ,
+    KC_F12  , CH_N   , CH_M    , CH_COMM , CH_DOT   , KC_UP   , CH_MINS  ,
               RCTL_T(KC_ESC)   , MO(1)   , KC_LEFT  , KC_DOWN , KC_RIGHT ,
-    KC_PSCR , KC_BRK ,
+    KC_PSCR , KC_RSFT ,
     C(S(CH_O)),
     C(S(CH_M)), KC_ENT  , KC_SPC
 ),

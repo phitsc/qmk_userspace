@@ -94,6 +94,7 @@ NAMED = {
     "LAUNCHER": (("Ctrl+Shift+Space\nLauncher", "Ctrl+Shift\n+Space\nLauncher"), "window"),
     "C(S(CH_M))": ("Teams\nmute", "media"), "C(S(CH_O))": ("Teams\ncamera", "media"),
     "C(S(CH_P))": ("Teams\nblur", "media"),
+    "C(S(KC_ESC))": ("Task\nmanager", "window"),
 }
 ARROWS = {"KC_LEFT": "←", "KC_RIGHT": "→", "KC_RGHT": "→", "KC_UP": "↑", "KC_DOWN": "↓"}
 GUI_ACTIONS = {  # what Gui+key does in Windows 11
