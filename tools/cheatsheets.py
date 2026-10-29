@@ -105,8 +105,9 @@ NAMED = {
 }
 ARROWS = {"KC_LEFT": "←", "KC_RIGHT": "→", "KC_RGHT": "→", "KC_UP": "↑", "KC_DOWN": "↓"}
 GUI_ACTIONS = {  # what Gui+key does in Windows 11
-    "CH_A": "Quick\nsettings", "CH_C": "Copilot", "CH_D": "Desktop", "CH_E": "Explorer",
-    "CH_I": "Settings", "CH_L": "Lock", "CH_M": "Min. all", "CH_R": "Run", "CH_V": "Clipboard",
+    "CH_A": "Action", "CH_C": "Copilot", "CH_D": "Desktop", "CH_E": "Explorer",
+    "CH_I": "Settings", "CH_L": "Lock", "CH_M": "Min. all", "CH_N": "Calendar",
+    "CH_R": "Run", "CH_V": "Clipboard",
     "KC_UP": "Maximize", "KC_DOWN": "Minimize", "KC_LEFT": "Snap", "KC_RIGHT": "Snap",
 }
 
