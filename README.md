@@ -22,10 +22,11 @@ target list in `qmk_alt.json`.
 Four layers on every keyboard: **Basic**, **Symbol** (hold Fn1), **Function** (hold Fn2) and
 **Misc** (hold Fn3).
 
-Keys on a Fn layer are tinted in that layer's colour, so the colour tells you which Fn key to
+Keys on a Fn layer are shades of that layer's colour, so the colour tells you which Fn key to
 hold, and the small label in the top-right corner is the Basic-layer key at that spot: Vol + is
-light blue with a "K" in the corner, so press Fn2 + K. Icons mark the kind of action, and the
-icons under each Fn key on the Basic layer show what you'll find on its layer.
+blue with a "K" in the corner, so press Fn2 + K. Within a layer the shade varies with the kind
+of action (on the Function layer: F-keys pale blue, media periwinkle, mouse cyan, LEDs teal). F-keys are pale blue and system keys (Reset,
+Version, NKRO) red-pink on every layer.
 
 On the Drop ALT, while a Fn layer is held, the keys that do something on it light up in that
 layer's colour from the cheat sheets (Symbol green, Function blue, Misc orange) and the other
