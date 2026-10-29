@@ -13,6 +13,7 @@ OUT = ROOT / "docs" / "cheatsheets"
 FONT_DIR = Path("C:/Windows/Fonts")
 FONT = str(FONT_DIR / "segoeui.ttf")
 FONT_BOLD = str(FONT_DIR / "segoeuib.ttf")
+FONT_ICONS = str(FONT_DIR / "SegoeIcons.ttf")   # Segoe Fluent Icons (Windows 11)
 
 U = 96          # pixels per key unit
 GAP = 6         # gap between keys
@@ -25,21 +26,21 @@ LAYERS = [
     ("Function layer", "hold Fn2", "#2f72d0"),
     ("Misc layer", "hold Fn3", "#d9822b"),
 ]
-CATEGORIES = {               # fill, text
-    "alpha":  ("#ffffff", "#1f2328"),
-    "mod":    ("#e6e9ee", "#1f2328"),
-    "symbol": ("#d9f2e2", "#14532d"),
-    "fkey":   ("#dbe7fb", "#1e3a8a"),
-    "media":  ("#ece0fa", "#4c1d95"),
-    "rgb":    ("#fbe0ec", "#831843"),
-    "mouse":  ("#d6f1ee", "#134e4a"),
-    "window": ("#fde8cf", "#7c2d12"),
-    "system": ("#f9d5d2", "#991b1b"),
+BASIC_FILLS = {"alpha": "#ffffff", "mod": "#e6e9ee"}   # Basic layer; anything else is white
+ICONS = {                    # category: (font file, glyph)
+    "symbol": (FONT_BOLD, "#"),
+    "fkey":   (FONT_ICONS, ""),   # keyboard
+    "media":  (FONT_ICONS, ""),   # speaker
+    "window": (FONT_ICONS, ""),   # window
+    "mouse":  (FONT_ICONS, ""),   # mouse
+    "rgb":    (FONT_ICONS, ""),   # light bulb
+    "system": (FONT_ICONS, ""),   # power
 }
+KEY_ICONS = {"media", "window", "mouse", "rgb", "system"}   # symbol/F-key labels speak for themselves
 LEGEND = [
     ("symbol", "Symbols"), ("fkey", "F-keys"), ("media", "Media"),
     ("window", "Windows shortcuts"), ("mouse", "Mouse"), ("rgb", "LEDs"),
-    ("system", "System"), ("mod", "Modifiers / navigation"),
+    ("system", "System"),
 ]
 BG = "#f6f7f9"
 TRANSPARENT_FILL = "#eef0f3"
@@ -233,11 +234,36 @@ KEYBOARDS = [
 _fonts = {}
 
 
-def font(size, bold=False):
-    key = (size, bold)
+def font(size, bold=False, path=None):
+    path = path or (FONT_BOLD if bold else FONT)
+    key = (size, path)
     if key not in _fonts:
-        _fonts[key] = ImageFont.truetype(FONT_BOLD if bold else FONT, size)
+        _fonts[key] = ImageFont.truetype(path, size)
     return _fonts[key]
+
+
+def mix(color, other, amount):
+    """Blend two #rrggbb colours; amount 0 = color, 1 = other."""
+    a = [int(color[i:i + 2], 16) for i in (1, 3, 5)]
+    b = [int(other[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join(f"{round(x + (y - x) * amount):02x}" for x, y in zip(a, b))
+
+
+def layer_colours(n):
+    """fill, text, outline for keys that do something on layer n."""
+    accent = LAYERS[n][2]
+    return mix(accent, "#ffffff", 0.84), mix(accent, "#000000", 0.55), mix(accent, "#ffffff", 0.55)
+
+
+def draw_glyph(draw, xy, glyph, size, color, anchor="lt"):
+    """Draw a glyph so its ink box sits at xy (anchor: l/r + t/b)."""
+    path, ch = glyph
+    f = font(size, path=path)
+    x0, y0, x1, y1 = f.getbbox(ch)
+    x = xy[0] - (x0 if anchor[0] == "l" else x1)
+    y = xy[1] - (y0 if anchor[1] == "t" else y1)
+    draw.text((x, y), ch, font=f, fill=color)
+    return x1 - x0
 
 
 def text_height(lines, sizes, descender=True):
@@ -270,19 +296,41 @@ def fit_key_text(draw, text, max_w, max_h):
     return lines, fit_lines(draw, lines, max_w, max_h, start)
 
 
-def draw_key(draw, rect, text, fill, color, outline=None, bold=False):
-    """text may be a tuple of alternative wrappings; the one whose smallest line is largest wins."""
+def draw_key(draw, rect, text, fill, color, outline=None, bold=False, width=2,
+             icon=None, corner=None, corner_color=None, badges=()):
+    """text may be a tuple of alternative wrappings; the one whose smallest line is largest wins.
+    icon: category glyph top left; corner: Basic-layer key label top right;
+    badges: row of category glyphs under the text."""
     x0, y0, x1, y1 = rect
-    draw.rounded_rectangle(rect, RADIUS, fill=fill, outline=outline or "#c9ced6",
-                           width=4 if outline else 2)
+    draw.rounded_rectangle(rect, RADIUS, fill=fill, outline=outline or "#c9ced6", width=width)
+    pad, small = 10, int(U * 0.22)
+    top = bottom = 0
+    if icon and corner:                 # no room for both: the Basic key label wins
+        widths = [font(small, path=p).getbbox(t) for p, t in (ICONS[icon], (FONT_BOLD, corner))]
+        if sum(b[2] - b[0] for b in widths) + 8 > x1 - x0 - 2 * pad:
+            icon = None
+    if icon:
+        draw_glyph(draw, (x0 + pad, y0 + pad - 2), ICONS[icon], small, color)
+    if corner:
+        draw_glyph(draw, (x1 - pad, y0 + pad - 2), (FONT_BOLD, corner), small, corner_color, "rt")
+    if icon or corner:
+        top = small + 2
+    if badges:
+        bottom = small + 4
+        sz = int(small * 0.9)
+        ws = [font(sz, path=ICONS[b][0]).getbbox(ICONS[b][1]) for b in badges]
+        ws = [b[2] - b[0] for b in ws]
+        x = (x0 + x1 - sum(ws) - 6 * (len(ws) - 1)) / 2
+        for b, w in zip(badges, ws):
+            draw_glyph(draw, (x, y1 - pad), ICONS[b], sz, color, "lb")
+            x += w + 6
     if not text:
         return
-    pad = 10
     variants = [text] if isinstance(text, str) else text
-    fits = [fit_key_text(draw, t, x1 - x0 - 2 * pad, y1 - y0 - 2 * pad) for t in variants]
+    fits = [fit_key_text(draw, t, x1 - x0 - 2 * pad, y1 - y0 - 2 * pad - top - bottom) for t in variants]
     lines, sizes = max(fits, key=lambda ls: min(ls[1]))
     fonts = [font(s, bold) for s in sizes]
-    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    cx, cy = (x0 + x1) / 2, (y0 + top + y1 - bottom) / 2
     baseline = cy - text_height(lines, sizes, descender=False) / 2 -fonts[0].getbbox("A", anchor="ls")[1]
     for i, (line, f) in enumerate(zip(lines, fonts)):
         if i:
@@ -304,6 +352,7 @@ def render_layer(layers, n, geometry):
         tw = d.textlength(name, font=font(34, bold=True))
         d.text((48 + tw + 18, 37), how, font=font(26), fill=TEXT_MUTED, anchor="lm")
 
+    fill, color, outline = layer_colours(n)
     for i, (x, y, w, h) in enumerate(geometry):
         rect = (20 + x * U + GAP / 2, header + y * U + GAP / 2,
                 20 + (x + w) * U - GAP / 2, header + (y + h) * U - GAP / 2)
@@ -312,20 +361,45 @@ def render_layer(layers, n, geometry):
             base = layers[0][i]
             text, cat = label(base) if base != "_______" else ("", "")
             if n and cat == f"layer{n}":            # the key held to reach this layer
-                draw_key(d, rect, f"{text}\nheld", accent, "#ffffff", outline=accent, bold=True)
+                draw_key(d, rect, f"{text}\nheld", accent, "#ffffff", outline=accent, width=4, bold=True)
             else:
                 draw_key(d, rect, text if n else "", TRANSPARENT_FILL, TRANSPARENT_TEXT)
             continue
-        text, cat = label(kc)
-        if n and cat == "alpha":                    # plain CH key placed on a symbol layer
-            cat = "symbol"
+        text, cat = key_category(kc, n)
         if cat.startswith("layer"):
             col = LAYERS[int(cat[-1])][2]
-            draw_key(d, rect, text, col, "#ffffff", bold=True)
+            draw_key(d, rect, text, col, "#ffffff", bold=True,
+                     badges=layer_categories(layers, int(cat[-1])))
+        elif n:
+            draw_key(d, rect, text, fill, color, outline=outline, icon=cat if cat in KEY_ICONS else None,
+                     corner=base_hint(layers[0][i]), corner_color=mix(color, fill, 0.2))
         else:
-            fill, color = CATEGORIES[cat]
-            draw_key(d, rect, text, fill, color)
+            draw_key(d, rect, text, BASIC_FILLS.get(cat, "#ffffff"), TEXT_DARK,
+                     icon=cat if cat in KEY_ICONS else None)
     return img
+
+
+def key_category(kc, n):
+    text, cat = label(kc)
+    if n and cat == "alpha":                        # plain CH key placed on a symbol layer
+        cat = "symbol"
+    return text, cat
+
+
+def layer_categories(layers, n):
+    """Icon categories of the keys defined on layer n, in legend order."""
+    cats = {key_category(kc, n)[1] for kc in layers[n] if kc != "_______"}
+    return [c for c, _ in LEGEND if c in cats]
+
+
+def base_hint(kc):
+    """Short label of the Basic-layer key at this position, or None."""
+    if kc == "_______":
+        return None
+    text, cat = label(kc)
+    if cat.startswith("layer") or not isinstance(text, str) or "\n" in text or len(text) > 4:
+        return None
+    return text.strip()
 
 
 def render_keyboard(title, layers, geometry):
@@ -345,16 +419,34 @@ def render_keyboard(title, layers, geometry):
         sheet.paste(p, (x, y))
         d.rounded_rectangle((x, y, x + pw, y + ph), 16, outline="#dde1e7", width=2)
 
-    # legend
-    x, y = margin + 10, H - legend_h / 2 - 10
-    for cat, text in LEGEND:
-        fill, color = CATEGORIES[cat]
-        d.rounded_rectangle((x, y - 18, x + 36, y + 18), 8, fill=fill, outline="#c9ced6", width=2)
+    legend = render_legend()
+    if legend.width > W - 2 * margin - 10:          # narrow sheet: shrink the legend to fit
+        scale = (W - 2 * margin - 10) / legend.width
+        legend = legend.resize((int(legend.width * scale), int(legend.height * scale)), Image.LANCZOS)
+    sheet.paste(legend, (margin + 10, int(H - legend_h / 2 - 10 - legend.height / 2)))
+    return sheet
+
+
+def render_legend():
+    img = Image.new("RGB", (4000, 40), BG)
+    d = ImageDraw.Draw(img)
+    x, y = 0, 20
+    for n in range(1, 4):
+        fill, color, outline = layer_colours(n)
+        d.rounded_rectangle((x, y - 18, x + 36, y + 18), 8, fill=fill, outline=outline, width=2)
+        d.rounded_rectangle((x + 3, y - 15, x + 9, y + 15), 3, fill=LAYERS[n][2])
+        text = f"{LAYERS[n][1].replace('hold ', '')}: {LAYERS[n][0].replace(' layer', '')}"
         d.text((x + 48, y), text, font=font(26), fill=TEXT_DARK, anchor="lm")
         x += 48 + d.textlength(text, font=font(26)) + 44
+    x += 20
+    for cat, text in LEGEND:
+        x += 6 + draw_glyph(d, (x + 4, y - 15), ICONS[cat], 30, TEXT_DARK) + 12
+        d.text((x, y), text, font=font(26), fill=TEXT_DARK, anchor="lm")
+        x += d.textlength(text, font=font(26)) + 44
     d.rounded_rectangle((x, y - 18, x + 36, y + 18), 8, fill=TRANSPARENT_FILL, outline="#c9ced6", width=2)
-    d.text((x + 48, y), "Grey text: falls through to the Basic layer", font=font(26), fill=TEXT_DARK, anchor="lm")
-    return sheet
+    text = "Grey text: falls through to the Basic layer"
+    d.text((x + 48, y), text, font=font(26), fill=TEXT_DARK, anchor="lm")
+    return img.crop((0, 0, int(x + 48 + d.textlength(text, font=font(26))) + 4, 40))
 
 
 def main():
