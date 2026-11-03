@@ -31,6 +31,10 @@ Version, NKRO) red-pink on every layer.
 On the Drop ALT, while a Fn layer is held, the keys that do something on it light up in that
 layer's colour from the cheat sheets (Symbol green, Function blue, Misc orange) and the other
 keys go dark; the edge keeps its colour. Releasing the Fn key brings back the normal lighting.
+Fn2 + N switches night mode on or off: the Basic layer then lights the typing keys (letters,
+digits, punctuation) in warm white and all other keys at a third of that, so the keyboard is
+readable in the dark. Brightness follows the normal setting (Fn2 + Tab / Fn2 + Fn1), and the
+edge keeps running its effect. Night mode is off again after the keyboard is unplugged.
 The ErgoDox Infinity does the same with its single-colour key LEDs, and both of its displays
 show the layer name with the backlight in the layer's colour.
 

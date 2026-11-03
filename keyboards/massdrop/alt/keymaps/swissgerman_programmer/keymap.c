@@ -4,7 +4,8 @@
 
 enum alt_keycodes {
     LED_AREA = USER_SAFE_RANGE, // cycle lit LEDs: keys + edge, keys only, edge only
-    MISC_FN2                    // on the Misc layer: Function layer while held (Fn3 + Alt = Fn2)
+    MISC_FN2,                   // on the Misc layer: Function layer while held (Fn3 + Alt = Fn2)
+    NIGHT                       // night mode on/off: steady key lighting on the Basic layer
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -60,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------------------------------------------------------------------------------------------|
  * | Val-     |  F7 |  F8 |  F9 |     |     |     | Vol-| Vol+|     |     |     |            |     |
  * |-----------------------------------------------------------------------------------------------|
- * | Area        | F10 | F11 | F12 |     | Brth|     | Mute|     |     |     |   MB1   | MUp | MB2 |
+ * | Area        | F10 | F11 | F12 |     | Brth|Night| Mute|     |     |     |   MB1   | MUp | MB2 |
  * |-----------------------------------------------------------------------------------------------|
  * |      |      |      |                Play                 |      | Fn3  |    |MLeft|MDown|MRght|
  * `-----------------------------------------------------------------------------------------------'
@@ -69,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     RGB_TOG,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_MPRV,  KC_MNXT,
     RGB_VAI,  KC_F4,   KC_F5,   KC_F6,   _______, _______, _______, _______, _______, _______, KC_PSCR, KC_SCRL, KC_PAUS, RGB_RMOD, RGB_MOD,
     RGB_VAD,  KC_F7,   KC_F8,   KC_F9,   _______, _______, _______, KC_VOLD, KC_VOLU, _______, _______, _______,          _______,  _______,
-    LED_AREA, KC_F10,  KC_F11,  KC_F12,  _______, BREATHE, _______, KC_MUTE, _______, _______, _______, MS_BTN1,          MS_UP,    MS_BTN2,
+    LED_AREA, KC_F10,  KC_F11,  KC_F12,  _______, BREATHE, NIGHT,   KC_MUTE, _______, _______, _______, MS_BTN1,          MS_UP,    MS_BTN2,
     _______,  _______, _______,                            KC_MPLY,                            _______, MO(3),   MS_LEFT,  MS_DOWN,  MS_RGHT
 ),
 
@@ -79,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |-----------------------------------------------------------------------------------------------|
  * | Reset  |     |     |Gui+E|Gui+R|     |     |     |Gui+I|     |     |     |     |        |     |
  * |-----------------------------------------------------------------------------------------------|
- * | Vrsn     |Gui+A|     |Gui+D|     |     |     |     |     |Gui+L|     |     |    F15     |     |
+ * | Vrsn     |Gui+A|     |Gui+D|     |     |     |     |     |Gui+L|     |TaskM|    F15     |     |
  * |-----------------------------------------------------------------------------------------------|
  * |             |     |     |Gui+C|Gui+V|     |Gui+N|Gui+M|     |     |     |         |Gui+↑|     |
  * |-----------------------------------------------------------------------------------------------|
@@ -89,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [3] = LAYOUT_65_ansi_blocker(
     NK_TOGG,    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_F14,     _______,
     QK_BOOT,    _______, _______, G(CH_E), G(CH_R), _______, _______, _______, G(CH_I), _______, _______, _______, _______, _______,    _______,
-    VRSN,       G(CH_A), _______, G(CH_D), _______, _______, _______, _______, _______, G(CH_L), _______, _______,          KC_F15,     _______,
+    VRSN,       G(CH_A), _______, G(CH_D), _______, _______, _______, _______, _______, G(CH_L), _______, C(S(KC_ESC)),     KC_F15,     _______,
     _______,    _______, _______, G(CH_C), G(CH_V), _______, G(CH_N), G(CH_M), _______, _______, _______, _______,          G(KC_UP),   _______,
     _______,    MISC_FN2, KC_F13,                            LAUNCHER,                           _______, _______, G(KC_LEFT), G(KC_DOWN), G(KC_RIGHT)
 ),
@@ -97,6 +98,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 static bool fn3_held = false;
+static bool night_mode = false;
 
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -134,6 +136,15 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
                 rgb_matrix_set_color_all(0, 0, 0);
             }
             return false;
+
+        case NIGHT:
+            if (record->event.pressed) {
+                night_mode = !night_mode;
+                if (night_mode && !rgb_matrix_is_enabled()) {
+                    rgb_matrix_enable_noeeprom(); // the lighting is drawn on top of the effect, so it needs the matrix on
+                }
+            }
+            return false;
     }
 
     return true;
@@ -142,9 +153,34 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 // Hue per layer, same colours as the cheat sheets: Symbol green, Function blue, Misc orange.
 static const uint8_t layer_hues[] = { [1] = 102, [2] = 152, [3] = 21 };
 
+// Keys that type a character on the Basic layer: letters, digits and the punctuation keys
+// (which carry Ü, Ö, Ä, ', ^, ¨, $, comma, dot and dash on a Swiss German host).
+static bool typing_key(uint16_t keycode) {
+    return (keycode >= KC_A && keycode <= KC_0) || (keycode >= KC_MINS && keycode <= KC_SLSH) || keycode == GRV_TLD;
+}
+
+// Night mode: the typing keys in warm white at the set brightness, all other keys at a third
+// of it. The edge keeps running the effect.
+static void light_night_keys(void) {
+    const uint8_t val = rgb_matrix_get_val();
+    const RGB bright = hsv_to_rgb((HSV){ 20, 110, val });
+    const RGB dim = hsv_to_rgb((HSV){ 20, 110, val / 3 });
+
+    for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
+        for (uint8_t col = 0; col < MATRIX_COLS; col++) {
+            const uint8_t led = g_led_config.matrix_co[row][col];
+            if (led == NO_LED) {
+                continue;
+            }
+            const RGB rgb = typing_key(keymap_key_to_keycode(0, (keypos_t){ .row = row, .col = col })) ? bright : dim;
+            rgb_matrix_set_color(led, rgb.r, rgb.g, rgb.b);
+        }
+    }
+}
+
 // While a Fn layer is active, light the keys that do something on it in the layer's colour
 // (plus the held Fn keys) and switch the other keys off. The edge keeps its colour.
-// On the Basic layer the effect runs as usual.
+// On the Basic layer the effect runs as usual, unless night mode is on.
 bool rgb_matrix_indicators_user(void) {
     const uint8_t layer = get_highest_layer(layer_state);
 
@@ -154,6 +190,9 @@ bool rgb_matrix_indicators_user(void) {
             if (!HAS_ANY_FLAGS(g_led_config.flags[i], rgb_matrix_get_flags())) {
                 rgb_matrix_set_color(i, 0, 0, 0);
             }
+        }
+        if (night_mode) {
+            light_night_keys();
         }
         return false;
     }
